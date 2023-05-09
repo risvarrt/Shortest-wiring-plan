@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8">
+
+	<link rel="stylesheet" type="text/css" href="styles.css" />
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"  ></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	<title>Shortest Path</title>
+
+	</head>
+	<body style="background-color:powderblue">
+
+
+	<section id="Nav-bar">
+        <nav class="navbar navbar-expand-lg navbar-light">
+			<a class="navbar-brand" href="#"><img src="img/tce-logo.png"></a>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+    </ul>
+  </div>
+</nav>
+
+     </section>
+
+
+
+	<br><br>
+		<center> <br>
+					<form>
+							<center>
+						<div class="titles"><label><b class="CL">CURRENT LOCATION</b></label></div>
+						  <div class="titles1"><select id="country">
+							<option value="None" selected>-- Select --</option>
+							<option value="Main">Main</option>
+							<option value="Hall 1">Hall 1</option>
+							<option value="Hall 2">Hall 2</option>
+							<option value="Washroom">Washroom</option>
+							<option value="Bedroom 1">Bedroom 1</option>
+							<option value="Bedroom 2">Bedroom 2</option>
+							<option value="Kitchen">Kitchen</option>
+						  </select>
+
+						<div class="titles"><label><b class="DL">DESTINATION LOCATION</b></label></div>
+							<div class="titles1"><select id="shopping">
+							  <option value="None" selected>-- Select --</option>
+							  <option value="Washroom">Washroom</option>
+							  <option value="Hall">Nearby Hall</option>
+							  <option value="Bedroom">Nearby Bedroom</option>
+							  <option value="Kitchen">Nearby Kitchen</option>
+							  <option value="Main">Main</option>
+							</select> </div>
+						</center>
+						</div><br><br>
+						<div class="titlesb"><button type="button" onclick="solve()">Search</button></div>
+						</form>
+<div class="titles2"><p id="result"></p></div>
+						  <br>
+			<img src="img/map.jpg" id="mapp" height="468px" width="547px" class="contain">
+			<br><br><br><br>
+			<div class="titles"><label><b>GRAPH:</b></label></div> <br>
+			<img src="graph.jpg" id="mapp" height="468px" width="547px" class="contain2">
+		</center>
+	</body>
+</html>
+
+
+<script type="text/javascript">
+
+
+function solve() {
+
+var graph = {
+    "Main": {"Washroom":80, "Hall 1":210, "Kitchen":310, "Bedroom 1":720, "Bedroom 2":545},
+    "Hall 1": {"Washroom":50, "Main":210, "Kitchen":100, "Bedroom 2":420, "Hall 2":410},
+    "Hall 2": {"Bedroom 1":150, "Kitchen": 310, "Bedroom 2":200,"Hall 1":410},
+    "Washroom": {"Hall 1":50, "Bedroom 2":250, "Main":80},
+    "Bedroom 1": {"Hall 2":150, "Bedroom 2":300, "Kitchen":400, "Main":720},
+    "Bedroom 2": {"Washroom":250, "Bedroom 1":100, "Hall 2":200, "Main":545},
+    "Kitchen": {"Hall 2":310, "Hall 1":100,"Bedroom 1":400,"Washroom":800,"Main":720},
+	};
+
+var e = document.getElementById("country");
+var curr = e.options[e.selectedIndex].value;
+
+var f = document.getElementById("shopping");
+var dest = f.options[f.selectedIndex].value;
+
+var imagee = document.getElementById('mapp');
+
+var s = curr;
+var start = s;
+
+/////dijikstra
+
+    var solutions = {};
+    solutions[s] = [];
+    solutions[s].dist = 0;
+    while(true) {
+        var parent = null;
+        var nearest = null;
+        var dist = Infinity;
+
+        for(var n in solutions) {
+            var adj = graph[n];
+            for(var a in adj) {
+                if(solutions[a])
+                    continue;
+                var len = adj[a];
+                if(len < dist) {
+                    parent = solutions[n];
+                    nearest = a;
+                    dist = len;
+                }
+            }
+        }
+
+        if(dist === Infinity) {
+            break; //no solution
+        }
+
+        solutions[nearest] = parent.concat(nearest);
+        solutions[nearest].dist = parent.dist + dist;
+    }
+
+
+//////print result
+
+		if((dest.localeCompare("None")==0) || (dest.localeCompare("None")==0))
+		{
+		document.getElementById("result").innerHTML = "<br><b>Invalid Input</b>";
+		imagee.src = "img/map.jpg";
+		}
+
+		else if(dest.localeCompare(curr)==0)
+		{
+		document.getElementById("result").innerHTML = "<br><b>Open your eyes!! You are already in your location</b>";
+		}
+
+		else if(dest.localeCompare("Kitchen")==0)
+		{
+					s="Kitchen";
+    				document.getElementById("result").innerHTML = "<br>The nearest Milk Store from " + start + " is <b>The " + s + "</b> <br><br> The Fastest route to reach the destination is  <br> <b>" + start + " --> " + solutions[s].join(" --> ") + " </b><br>( Distance : " + solutions[s].dist +"m ) <br><br> <b> Check your directions below </b> ";
+		}
+
+		else if(dest.localeCompare("Main")==0)
+		{
+					s="Main";
+    				document.getElementById("result").innerHTML = "<br>The Fastest route to reach your home is  <br> <b>" + start + " --> " + solutions[s].join(" --> ") + " </b><br>( Distance : " + solutions[s].dist +"m ) <br><br> <b> Check your directions below </b>";
+
+		}
+
+		else if(dest.localeCompare("Hall")==0)
+		{
+
+							if ((curr.localeCompare("Bedroom 1")==0) || (curr.localeCompare("Kitchen")==0) )
+							{
+								document.getElementById("result").innerHTML = "<br> <b>You are already in the Kitchen</b>";
+							}
+							else if( solutions["Bedroom 1"].dist < solutions["Kitchen"].dist)
+								{
+									s="Bedroom 1";
+							    	document.getElementById("result").innerHTML = "<br>The nearest route to Kitchen from " + start + " is <b>The " + s + "</b> <br><br> The Fastest route to reach the destination is  <br> <b>" + start + " --> " + solutions[s].join(" --> ") + " </b><br>( Distance : " + solutions[s].dist +"m ) <br><br> <b> Check your directions below </b>";
+
+				   				}
+							else
+								{
+									s="Kitchen";
+						    		document.getElementById("result").innerHTML = "<br>The nearest route to Kitchen from " + start + " is <b>The " + s + "</b> <br><br> The Fastest route to reach the destination is  <br> <b>" + start + " --> " + solutions[s].join(" --> ") + " </b><br>( Distance : " + solutions[s].dist +"m ) <br><br> <b> Check your directions below </b>";
+				    			}
+		}
+
+		else if(dest.localeCompare("Washroom")==0)
+		{
+								if ((curr.localeCompare("Hall 1")==0) || (curr.localeCompare("Hall 2")==0) )
+								{
+									document.getElementById("result").innerHTML = "<br> <b>You are already in a Medical Shop</b>";
+								}
+								else if( solutions["Hall 1"].dist < solutions["Hall 2"].dist)
+									{
+										s="Hall 1";
+										document.getElementById("result").innerHTML = "<br>The nearest route to Washroom from " + start + " is <b>The " + s + "</b> <br><br> The Fastest route to reach the destination is  <br> <b>" + start + " --> " + solutions[s].join(" --> ") + " </b><br>( Distance : " + solutions[s].dist +"m ) <br><br> <b> Check the plan below </b>";
+
+									}
+								else
+									{
+										s="Hall 2";
+										document.getElementById("result").innerHTML = "<br>The nearest Medical Store from " + start + " is <b>The " + s + "</b> <br><br> The Fastest route to reach the destination is  <br> <b>" + start + " --> " + solutions[s].join(" --> ") + " </b><br>( Distance : " + solutions[s].dist +"m ) <br><br> <b> Check your directions below </b>";
+									}
+		}
+
+
+
+///////picture animation
+
+	{
+
+
+
+	if(curr.localeCompare("Main")==0)
+		{ 		if (dest.localeCompare("Washroom")==0)
+					imagee.src = "img/main-wash1.gif";
+				else if (dest.localeCompare("Hall")==0)
+					imagee.src = "img/home/hometogovt.gif";
+				else if (dest.localeCompare("Bedroom")==0)
+					imagee.src = "img/home/hometorama.gif";
+				else if	(dest.localeCompare("Kitchen")==0)
+					imagee.src = "img/home/hometohatsun.gif";
+				else if (dest.localeCompare("Main")==0)
+					imagee.src = "img/map.jpg";
+		}
+
+	else if(curr.localeCompare("Hall 1")==0)
+		{ 		if (dest.localeCompare("Washroom")==0)
+					imagee.src = "img/map.jpg";
+				else if (dest.localeCompare("Hall")==0)
+					imagee.src = "img/priya/priyatogovt.gif";
+				else if (dest.localeCompare("Bedroom")==0)
+					imagee.src = "img/priya/priyatorama.gif";
+				else if	(dest.localeCompare("Kitchen")==0)
+					imagee.src = "img/priya/priyatohatsun.gif";
+				else if (dest.localeCompare("Main")==0)
+					imagee.src = "img/priya/priyatohome.gif";
+		}
+
+	else if(curr.localeCompare("Hall 2")==0)
+		{ 		if (dest.localeCompare("Washroom")==0)
+					imagee.src = "img/map.jpg";
+				else if (dest.localeCompare("Hall")==0)
+					imagee.src = "img/sriom/omtogovt.gif";
+				else if (dest.localeCompare("Bedroom")==0)
+					imagee.src = "img/sriom/omtorama.gif";
+				else if	(dest.localeCompare("Kitchen")==0)
+					imagee.src = "img/sriom/omtohatsun.gif";
+				else if (dest.localeCompare("Main")==0)
+					imagee.src = "img/sriom/omtohome.gif";
+		}
+
+	else if(curr.localeCompare("Washroom")==0)
+		{ 		if (dest.localeCompare("Washroom")==0)
+					imagee.src = "img/rama/ramatoom.gif";
+				else if (dest.localeCompare("Hall")==0)
+					imagee.src = "img/rama/ramatogovt.gif";
+				else if (dest.localeCompare("Bedroom")==0)
+					imagee.src = "img/map.jpg";
+				else if	(dest.localeCompare("Kitchen")==0)
+					imagee.src = "img/rama/ramatohatsun.gif";
+				else if (dest.localeCompare("Main")==0)
+					imagee.src = "img/rama/ramatohome.gif";
+		}
+
+	else if(curr.localeCompare("Bedroom 1")==0)
+		{ 		if (dest.localeCompare("Washroom")==0)
+					imagee.src = "img/govt/govttoom.gif";
+				else if (dest.localeCompare("Hall")==0)
+					imagee.src = "img/map.jpg";
+				else if (dest.localeCompare("Bedroom")==0)
+					imagee.src = "img/govt/govttorama.gif";
+				else if	(dest.localeCompare("Kitchen")==0)
+					imagee.src = "img/govt/govttohatsun.gif";
+				else if (dest.localeCompare("Main")==0)
+					imagee.src = "img/govt/govttohome.gif";
+		}
+
+	else if(curr.localeCompare("Bedroom 2")==0)
+		{ 		if (dest.localeCompare("Washroom")==0)
+					imagee.src = "img/hatsun/hatsuntoom.gif";
+				else if (dest.localeCompare("Hall")==0)
+					imagee.src = "img/hatsun/hatsuntogovt.gif";
+				else if (dest.localeCompare("Bedroom")==0)
+					imagee.src = "img/hatsun/hatsuntorama.gif";
+				else if	(dest.localeCompare("Kitchen")==0)
+					imagee.src = "img/map.jpg";
+				else if (dest.localeCompare("Main")==0)
+					imagee.src = "img/hatsun/hatsuntohome.gif";
+		}
+
+	else if(curr.localeCompare("Kitchen")==0)
+		{ 		if (dest.localeCompare("Washroom")==0)
+					imagee.src = "img/aravind/aravindtoom.gif";
+				else if (dest.localeCompare("Hall")==0)
+					imagee.src = "img/map.jpg";
+				else if (dest.localeCompare("Bedroom")==0)
+					imagee.src = "img/aravind/aravindtonagaraj.gif";
+				else if	(dest.localeCompare("Kitchen")==0)
+					imagee.src = "img/aravind/aravindtohatsun.gif";
+				else if (dest.localeCompare("Main")==0)
+					imagee.src = "img/aravind/aravindtohome.gif";
+		}
+
+
+	}
+
+    return solutions;
+
+    }
+		</script>
