@@ -10,22 +10,6 @@ This project is a solution for finding the shortest wiring plan in a given setup
 - **Visualization**: Provides a visual representation of the wiring plan.
 - **Customization**: Users can add or remove points to customize the wiring plan.
 
-## Screenshots
-
-### Wiring Plan Visualization
-![Wiring Plan Visualization](assets/home.png)
-
-![Wiring Plan Visualization](assets/plan.png)
-
-![Output](assets/main-wash1.gif)
-## How to Use
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/risvarrt/Shortest-wiring-plan.git
-   ```
-2. **Open the index.html file in your browser** to start visualizing the wiring plan.
-
 ## Technical Details
 
 ### Tech Stack
@@ -42,6 +26,23 @@ This project is a solution for finding the shortest wiring plan in a given setup
 - **style.css**: Contains all the CSS styles used across the web pages.
 - **script.js**: Contains the logic for calculating the shortest wiring plan and rendering the visualization.
 - **assets/**: This folder contains the images and other assets used in the project.
+  
+## Screenshots
+
+### Wiring Plan Visualization
+![Wiring Plan Visualization](assets/home.png)
+
+![Wiring Plan Visualization](assets/plan.png)
+
+![Output](assets/main-wash1.gif)
+## How to Use
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/risvarrt/Shortest-wiring-plan.git
+   ```
+2. **Open the index.html file in your browser** to start visualizing the wiring plan.
+
 
 ### Dijkstra's Algorithm Overview
 
