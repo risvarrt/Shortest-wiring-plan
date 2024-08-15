@@ -3,9 +3,6 @@
 
 This project is a solution for finding the shortest wiring plan in a given setup. The main objective is to connect various points in a space with the minimal amount of wiring, ensuring an efficient and cost-effective layout.
 
-## Project Links
-
-- **Repository**: [Shortest Wiring Plan](https://github.com/risvarrt/Shortest-wiring-plan)
 
 ## Features
 
