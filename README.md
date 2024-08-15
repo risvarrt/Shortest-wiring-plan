@@ -20,8 +20,7 @@ This project is a solution for finding the shortest wiring plan in a given setup
 
 ![Wiring Plan Visualization](assets/plan.png)
 
-![Output] (assets/main-wash1.gif)
-
+![Output](assets/main-wash1.gif)
 ## How to Use
 
 1. **Clone the repository**:
